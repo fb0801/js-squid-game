@@ -7,12 +7,21 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
+const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+scene.add( light );
+
 //const geometry = new THREE.BoxGeometry();
 //const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 //const cube = new THREE.Mesh( geometry, material );
 //scene.add( cube );
 
 camera.position.z = 5;
+
+const loader = new THREE.GLTFLoader();
+loader.load("../models/scene.gltf", function(gltf) {
+	scene.add(gltf.scene);
+	
+})
 
 function animate() {
 	requestAnimationFrame( animate );
