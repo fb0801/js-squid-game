@@ -12,12 +12,17 @@ renderer.setClearColor(0xb7c3f3, 1);
 const light = new THREE.AmbientLight( 0xffffff ); // soft white light
 scene.add( light );
 
+//global var
 
+const start_position = 6
+const end_position = -start_position
 
-function createCube(){
-	const geometry = new THREE.BoxGeometry();
+function createCube(size, positionX, rotX = 0){
+	const geometry = new THREE.BoxGeometry(size.w, size.h, size.d);
 	const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 	const cube = new THREE.Mesh( geometry, material );
+		 cube.position.x = positionX; 
+		  cube.rotation.x = rotX;
 	scene.add( cube );
 }
 
@@ -47,8 +52,10 @@ class Doll{
 }
 
 function createTrack(){
-
+createCube({w: .2, h: 1.5, d: 1}, start_position, -.4)
+createCube({w: .2, h: 1.5, d: 1}, end_position, .4)
 }
+createTrack()
 
 let doll = new Doll();
 setTimeout(() => {
