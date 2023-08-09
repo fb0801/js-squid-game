@@ -60,6 +60,32 @@ createCube({w: .2, h: 1.5, d: 1}, end_position, .4)
 
 createTrack()
 
+class Player{
+	constructor(){
+	const geometry = new THREE.SphereGeometry( .3, 32, 16 ); 
+	const material = new THREE.MeshBasicMaterial( { color: 0xffffff } ); 
+	const sphere = new THREE.Mesh( geometry, material ); 
+	sphere.position.x = start_position
+	scene.add( sphere );
+	this.player = sphere
+	this.playerinfo = {
+		positionX: start_position,
+		velocity: 0,
+	}
+	}
+
+	run(){
+		this.playerInfo.velocity = .03
+	}
+
+	update(){
+		this.playerinfo.positionX -= this.playerinfo.velocity
+		this.playerinfo.position.x = this.playerinfo.positionX
+	}
+}
+
+const player = new Player()
+
 let doll = new Doll();
 setTimeout(() => {
 	doll.lookBackward()
@@ -68,6 +94,7 @@ setTimeout(() => {
 function animate() {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
+	player.update()
 }
 animate();
 
