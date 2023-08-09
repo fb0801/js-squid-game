@@ -77,6 +77,9 @@ class Player{
 	run(){
 		this.playerInfo.velocity = .03
 	}
+	stop(){
+		 gsap.to(this.playerInfo, { duration: .1, velocity: 0 })
+	}
 
 	update(){
 		this.playerinfo.positionX -= this.playerinfo.velocity
@@ -105,3 +108,18 @@ function onWindowResize(){
 	camera.updateProjectionMatrix();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+window.addEventListener( "keydown", function(e){
+    if(gameStat != "started") return
+    let p = players.find(player => player.key == e.key)
+    if(p){
+        p.player.run()
+    }
+})
+
+window.addEventListener( "keyup", function(e){
+    let p = players.find(player => player.key == e.key)
+    if(p){
+        p.player.stop()
+    }
+})
