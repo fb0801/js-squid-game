@@ -31,6 +31,10 @@ camera.position.z = 5;
 
 const loader = new THREE.GLTFLoader();
 
+function delay(ms){
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 class Doll{
 	constructor(){
@@ -49,6 +53,13 @@ class Doll{
 		//this.doll.rotation.y = 0
 		gsap.to(this.doll.rotation, {y: 0, duration: .45})
 
+	}
+	async start(){
+		this.lookBackward()
+		await delay((Math.random() * 1000) + 1000)
+		this.lookForward()
+		await delay((Math.random() * 750) + 750)
+		this.start()
 	}
 }
 
@@ -91,7 +102,7 @@ const player = new Player()
 
 let doll = new Doll();
 setTimeout(() => {
-	doll.lookBackward()
+	doll.start()
 }, 1000);
 
 function animate() {
