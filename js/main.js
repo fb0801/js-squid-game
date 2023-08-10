@@ -16,6 +16,10 @@ scene.add( light );
 
 const start_position = 6
 const end_position = -start_position
+const text =  document.querySelector('.text')
+const TIME_LIMIT = 10
+let gameStat = 'loading'
+let isLookingBackward = true
 
 function createCube(size, positionX, rotY = 0, color= 0xfbc851){
 	const geometry = new THREE.BoxGeometry(size.w, size.h, size.d);
@@ -46,12 +50,14 @@ class Doll{
 		})
 	}
 	lookBackward(){
-		//this.doll.rotation.y = -3.15
+		
 		gsap.to(this.doll.rotation, {y: -3.15, duration: .45})
+		setTimeout(() => isLookingBackward = true, 150)
 	}
 	lookForward(){
 		//this.doll.rotation.y = 0
 		gsap.to(this.doll.rotation, {y: 0, duration: .45})
+		setTimeout(() => isLookingBackward = false, 450)
 
 	}
 	async start(){
@@ -91,8 +97,39 @@ class Player{
 	stop(){
 		 gsap.to(this.playerInfo, { duration: .1, velocity: 0 })
 	}
-
+	check(){
+		if(this.playerInfo.isDead) return
+        if(!dallFacingBack && this.playerInfo.velocity > 0){
+            text.innerText = this.playerInfo.name + " lost!!!"
+            this.playerInfo.isDead = true
+            this.stop()
+            DEAD_PLAYERS++
+            loseMusic.play()
+            if(DEAD_PLAYERS == players.length){
+                text.innerText = "Everyone lost!!!"
+                gameStat = "ended"
+            }
+            if(DEAD_PLAYERS + SAFE_PLAYERS == players.length){
+                gameStat = "ended"
+            }
+        }
+        if(this.playerInfo.positionX < end_position + .7){
+            text.innerText = this.playerInfo.name + " is safe!!!"
+            this.playerInfo.isDead = true
+            this.stop()
+            SAFE_PLAYERS++
+            winMusic.play()
+            if(SAFE_PLAYERS == players.length){
+                text.innerText = "Everyone is safe!!!"
+                gameStat = "ended"
+            }
+            if(DEAD_PLAYERS + SAFE_PLAYERS == players.length){
+                gameStat = "ended"
+            }
+        }
+	}
 	update(){
+		this.check()
 		this.playerinfo.positionX -= this.playerinfo.velocity
 		this.playerinfo.position.x = this.playerinfo.positionX
 	}
@@ -101,13 +138,40 @@ class Player{
 const player = new Player()
 
 let doll = new Doll();
-setTimeout(() => {
+
+async function init(){
+	await delay(500)
+	text.innerText = 'starting in 3'
+	await delay(500)
+	text.innerText = 'starting in 2'
+	await delay(500)
+	text.innerText = 'starting in 1'
+	await delay(500)
+	text.innerText = 'GOOO!!'
+	startGame()
+}
+
+function startGame(){
+	gameStat = 'started'
+	let progressBar = createCube({w: 8, h: .1, d: 1}, 0, 0, 0xebaa12)
+	progressBar.position.y = 3.35
+	gsap.to(progressBar.scale, {duration: TIME_LIMIT, x: 0, ease: "none"})
 	doll.start()
-}, 1000);
+	setTimeout(() => {
+        if(gameStat != "over"){
+            text.innerText = "Ran out of Time!!!"
+            gameStat = "over"
+        }
+    }, TIME_LIMIT * 1000)
+}
+
+init()
+
 
 function animate() {
-	requestAnimationFrame( animate );
+	if (gameStat =='over') return
 	renderer.render( scene, camera );
+	requestAnimationFrame( animate );
 	player.update()
 }
 animate();
