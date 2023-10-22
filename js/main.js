@@ -12,6 +12,7 @@ renderer.setClearColor(0xb7c3f3, 1);
 const light = new THREE.AmbientLight( 0xffffff ); // soft white light
 scene.add( light );
 
+
 //global var
 
 const start_position = 6
@@ -20,6 +21,9 @@ const text =  document.querySelector('.text')
 const TIME_LIMIT = 10
 let gameStat = 'loading'
 let isLookingBackward = true
+
+let beat = new Audio('sounds/squid-game-theme.mp3');
+let robotgirl = new Audio('sounds/robot-girl.mp3');
 
 function createCube(size, positionX, rotY = 0, color= 0xfbc851){
 	const geometry = new THREE.BoxGeometry(size.w, size.h, size.d);
@@ -53,6 +57,7 @@ class Doll{
 		
 		gsap.to(this.doll.rotation, {y: -3.15, duration: .45})
 		setTimeout(() => isLookingBackward = true, 150)
+		robotgirl.play()
 	}
 	lookForward(){
 		//this.doll.rotation.y = 0
@@ -157,6 +162,7 @@ function startGame(){
 	progressBar.position.y = 3.35
 	gsap.to(progressBar.scale, {duration: TIME_LIMIT, x: 0, ease: "none"})
 	doll.start()
+	beat.play();
 	setTimeout(() => {
         if(gameStat != "over"){
             text.innerText = "Ran out of Time!!!"

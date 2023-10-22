@@ -5,6 +5,10 @@ Squid game
 
 Building squid game in javascript using <a href="https://www.youtube.com/watch?v=4HSxX-EKJjw&pp=ygUNanMgc3F1aWQgZ2FtZQ%3D%3D">freecodecamp</a> video
 
+## changes made:
+
+added sound to the game
+
 ## Issues:
 
 cdn code moved to here -> https://greensock.com/docs/v3/Installation
